@@ -1,2 +1,23 @@
 ---
-# defaults file for ansible-role-igtf
+# cmd-os or cmd-one
+cmd_distribution: cmd-os
+
+# cmd release number
+cmd_release: 1
+
+# OpenStack version to use
+cmd_openstack_release: pike
+
+# whether to enable or not the candidate repo
+cmd_enable_candidate_repo: false
+
+# boolean to execute tasks on igtf.yml
+ca_verification: false
+
+# IGTF repository parameters
+ca_branch: production
+ca_server: repository.egi.eu
+ca_version: 1
+
+# boolean to install fetch-crl
+crl_deploy: false
