@@ -1,6 +1,4 @@
 ---
-# tasks file for ansible-role-igtf
----
 - name: Set necessary facts
   set_fact:
     ca_branch: "unverified"
@@ -11,7 +9,7 @@
   apt_key:
     url: "https://dist.eugridpma.info/distribution/igtf/current/GPG-KEY-EUGridPMA-RPM-3"
     state: present
-  when: ansible_distribution == 'Ubuntu'
+  when: ansible_os_family == 'Debian'
 
 - name: Add IGTF repository for APT
   apt_repository:
@@ -19,7 +17,7 @@
     state: present
     filename: egi-igtf
     update_cache: 'yes'
-  when: ansible_distribution == 'Ubuntu'
+  when: ansible_os_family == 'Debian'
 
 - name: Ensure yum.repos.d directory is present
   file:
@@ -36,7 +34,7 @@
     enabled: 'yes'
     gpgcheck: 'yes'
     gpgkey: http://repository.egi.eu/sw/production/cas/1/GPG-KEY-EUGridPMA-RPM-3
-  when: (ansible_os_family | lower) == 'redhat'
+  when: ansible_os_family == 'RedHat'
 
 - name: Ensure EGI Policy Core is present
   package:
