@@ -48,7 +48,5 @@
   when: ca_verification
 
 - name: Ensure CRL package is present
-  package:
-    name: fetch-crl
-    state: present
+  include: crl.yml
   when: crl_deploy
