@@ -21,7 +21,6 @@
   notify: yum-clean-metadata
   when: (ansible_os_family | lower) == 'redhat'
 
-
 - name: Ensure CRL package is present (debian)
   package:
     name: fetch-crl
