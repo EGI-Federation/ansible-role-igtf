@@ -1,2 +1,52 @@
 ---
-# tasks file for ansible-role-igtf
+- name: Set necessary facts
+  set_fact:
+    ca_branch: "unverified"
+    ca_server: admin-repo.egi.eu
+  when: ca_verification
+
+- name: Add apt key
+  apt_key:
+    url: "https://dist.eugridpma.info/distribution/igtf/current/GPG-KEY-EUGridPMA-RPM-3"
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Add IGTF repository for APT
+  apt_repository:
+    repo: deb http://{{ ca_server }}/sw/{{ ca_branch }}/cas/{{ ca_version }}/current egi-igtf core
+    state: present
+    filename: egi-igtf
+    update_cache: 'yes'
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure yum.repos.d directory is present
+  file:
+    path: /etc/yum.repos.d
+    owner: root
+    state: directory
+    group: root
+
+- name: Add IGTF repository for YUM
+  yum_repository:
+    name: EGI-trustanchors
+    description: EGI-trustanchors repo
+    baseurl: "http://{{ ca_server }}/sw/{{ ca_branch }}/cas/{{ ca_version }}/current/"
+    enabled: 'yes'
+    gpgcheck: 'yes'
+    gpgkey: http://repository.egi.eu/sw/production/cas/1/GPG-KEY-EUGridPMA-RPM-3
+  when: ansible_os_family == 'RedHat'
+
+- name: Ensure EGI Policy Core is present
+  package:
+    name: ca-policy-egi-core
+    state: present
+
+- name: Ensure WLCG CA package is present
+  package:
+    name: ca-policy-lcg
+    state: present
+  when: ca_verification
+
+- name: Ensure CRL package is present
+  include: crl.yml
+  when: crl_deploy

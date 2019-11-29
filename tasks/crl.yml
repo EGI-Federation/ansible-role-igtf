@@ -1,0 +1,28 @@
+---
+- name: Temporarily enable EPEL repo (install)
+  package:
+    name: epel-release
+    state: present
+  when: (ansible_os_family | lower) == 'redhat'
+
+- name: Ensure CRL package is present (RedHat)
+  yum:
+    enablerepo: epel
+    name: fetch-crl
+    state: present
+  when: (ansible_os_family | lower) == 'redhat'
+
+- name: Remove repository
+  yum_repository:
+    name: epel
+    enabled: no
+    description: 'Extra Packages for Enterprise Linux 7 - $basearch'
+    metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=$basearch&infra=$infra&content=$contentdir
+  notify: yum-clean-metadata
+  when: (ansible_os_family | lower) == 'redhat'
+
+- name: Ensure CRL package is present (debian)
+  package:
+    name: fetch-crl
+    state: present
+  when: (ansible_os_family | lower) == 'debian'

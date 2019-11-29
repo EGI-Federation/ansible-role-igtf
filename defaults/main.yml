@@ -1,2 +1,11 @@
 ---
-# defaults file for ansible-role-igtf
+# boolean to execute tasks on igtf.yml
+ca_verification: false
+
+# IGTF repository parameters
+ca_branch: production
+ca_server: repository.egi.eu
+ca_version: 1
+
+# boolean to install fetch-crl
+crl_deploy: false
